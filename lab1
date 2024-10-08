@@ -104,3 +104,40 @@ mac = [1,2,3;4,5,4;7,8,5]
 avg = mean(mac)
 mac - avg
 zad10
+mac = [1,2,3;4,5,4]
+[rows,cols] = size(mac)
+B =-1 + 2*rand(rows,cols)
+zad11
+A= randi([0,5],4,3)
+for i = 1:size(A, 1)  % Iteracja przez wiersze
+    for j = 2:size(A, 2)  % Iteracja przez kolumny, zaczynając od drugiej
+        A(i, j) = A(i, j) + A(i, j-1);  % Powiększenie o wartość z kolumny po lewej
+    end
+end
+zad12
+A= randi([0,5],3,4)
+for i = 1:size(A, 1)
+    for j = 1:size(A, 2)
+        if A(i, j) > 3 
+            A(i, j) = 0; 
+        end
+    end
+end
+A
+zad13
+x = linspace(-pi, pi, 100);
+y1 = abs(sin(x));
+y2 = atan(x);
+
+figure;
+plot(x, y1, 'b', 'DisplayName', 'abs(sin(x))');
+hold on;
+plot(x, y2, 'r', 'DisplayName', 'atan(x)'); 
+
+xlabel('x');
+ylabel('y');
+title('Wykres funkcji abs(sin(x)) i atan(x)');
+legend show;
+hold off;
+
+zad14
