@@ -141,3 +141,19 @@ legend show;
 hold off;
 
 zad14
+obrazek = imread('rzeczka.jpg');
+obrazek(:, 10:50, 1) = 255;
+obrazek(:, 10:50, 2) = 255;
+obrazek(:, 10:50, 3) = 0;
+imshow(obrazek);
+
+zad15
+obrazek2 = imread('rzeczka.jpg');
+lustro = obrazek2(:,end:-1:1,:);
+wynik = [obrazek2,lustro];
+imshow(wynik)
+
+zad16
+obrazek3 = imread('rzeczka.jpg');
+negatyw = 255 - obrazek3;
+imshow(negatyw)
