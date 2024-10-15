@@ -155,3 +155,11 @@ zad16
 obrazek3 = imread('rzeczka.jpg');
 negatyw = 255 - obrazek3;
 imshow(negatyw)
+
+zad nwm 
+ꢭ䏢
+>> (v > 15 & v <=18)
+ans =
+
+  0  0  0  0  0  1  1  1  0  0
+v(v > 15 & v <=18) da nam wartosci a nie 0 i 1
