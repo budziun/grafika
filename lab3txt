@@ -2,3 +2,96 @@
 %% [y,x,z] w octave
 %% jak jest nazwa.* to dac taka sama
 %% myslec 
+
+0|1|2|3|4|5|6|7|8|9|  
+wy = LUT[we+1]   wy - wyjscie we - wejscie
+2|3|4|5|6|7|8|9|10|11|  +2
+2|3|4|5|6|7|8|9|9|9|
+wy = LUT[we-3] 
+-3|-2|-1|0|1|2|3|4|5|6| -3
+0|0|0|0|1|2|3|4|5|6| przycinanie
+dwa na raz
+0|0|1|2|3|4|5|6|6|6| tak wyszlo bo sie poprzycinalo od razu przy iteracji
+tablice LUT mozemy zrobic dla wszystkich kolorow razem albo dla kazdego osobno
+sublot mozna uzywac zeby porownywac obrazki
+
+%zad1
+image = imread('rzeczka2.png');
+img = double(image)/255;
+gamma = 0.7;
+img_corrected = img .^ (1/gamma);
+
+img_corrected_uint8 = uint8(img_corrected *255);
+
+figure;
+subplot(1,2,1);
+imshow(img);
+title('przed zmiana')
+subplot(1,2,2);
+imshow(img_corrected_uint8);
+title('po zmianach');
+
+%zad2 
+image = imread('rzeczka2.png');
+img = double(image)/255;
+gamma = 1.5;
+img_corrected = img .^ (1/gamma);
+
+img_corrected_uint8 = uint8(img_corrected *255);
+
+figure;
+subplot(1,2,1);
+imshow(img);
+title('przed zmiana')
+subplot(1,2,2);
+imshow(img_corrected_uint8);
+title('po zmianach');
+
+%zad3
+function zad1()
+    img = imread('rzeczka2.png');
+    img_double = double(img); 
+ 
+    wspJasnosci_neg = -50; 
+    wspJasnosci_zero = 0;  
+    wspJasnosci_pos = 50;
+ 
+    img_neg = ZmienJasnosc(img_double, wspJasnosci_neg);
+    img_zero = ZmienJasnosc(img_double, wspJasnosci_zero);
+    img_pos = ZmienJasnosc(img_double, wspJasnosci_pos);
+ 
+    figure;
+ 
+    subplot(1, 3, 1);
+    imshow(uint8(img_neg));
+    title('Jasność -50');
+ 
+    subplot(1, 3, 2);
+    imshow(uint8(img_zero));
+    title('Oryginalny');
+ 
+    subplot(1, 3, 3);
+    imshow(uint8(img_pos));
+    title('Jasność +50');
+end
+ 
+function output = ZmienJasnosc(input, wspJasnosci)
+    output = input + wspJasnosci;
+    output = PrzytnijZakres(output);
+end
+ 
+function output = PrzytnijZakres(input)
+    output = zeros(size(input));
+    for i = 1:numel(input)
+        if input(i) < 0
+            output(i) = 0;
+        elseif input(i) > 255
+            output(i) = 255;
+        else
+            output(i) = input(i);
+        end
+    end
+end
+
+zad1();
+%zad4
