@@ -36,3 +36,107 @@ subplot(2,2,3), imshow(uint8(porownanie_PS_4)),title ('Porównanie v.PS *4');
 subplot(2,2,4), imshow(uint8(porownanie_v2_3)),title ('Porównanie v.2 *3');
 
 %zad2
+img = imread('rzeczka.jpg');
+img = double(img);
+
+function szarosc = SzaroscSrednia(img)
+  r = img(:,:,1);
+  g = img(:,:,2);
+  b = img(:,:,3);
+  szarosc = (r+g+b) /3;
+end
+function szarosc = SzaroscSzary(img)
+  r = img(:,:,1);
+  g = img(:,:,2);
+  b = img(:,:,3);
+  szarosc = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+end
+
+szarosc_srednia = SzaroscSrednia(img);
+szarosc_szary = SzaroscSzary(img);
+
+function output = porownanie_v_PS(img1,img2)
+  output = abs(img2-im1);
+end
+
+function output = porownanie_v_2(img1,img2)
+  srodek = 127.5;
+  output = img2-im1 + srodek;
+  output = min(max(output,0),255);
+end
+
+function output = porownanie_v_PS_mnoznik(img1,img2,mnoznik)
+  output = mnoznik * abs(img2-img1);
+  output = min(max(output,0),255);
+ end
+ 
+function output = porownanie_v_2_mnoznik(img1,img2,mnoznik)
+  srodek = 127.5;
+  output = mnoznik * (img2-img1) + srodek;
+  output = min(max(output,0),255);
+end
+
+porownanie_PS_4 = porownanie_v_PS_mnoznik(szarosc_szary,szarosc_srednia,4);
+porownanie_v2_3 = porownanie_v_2_mnoznik(szarosc_szary,szarosc_srednia,3);
+
+subplot(2,2,1), imshow(uint8(szarosc_szary)), title('Szary');
+subplot(2,2,2), imshow(uint8(szarosc_srednia)), title('Średnia');
+subplot(2,2,3), imshow(uint8(porownanie_PS_4)), title('Porównianie v.PS *4');
+subplot(2,2,4), imshow(uint8(porownanie_v2_3)), title('Porównanie v.2 *3');
+
+%zad3
+img_uint8 = imread('rzeczka.jpg');
+obraz = double(img_uint8);
+
+R = obraz(:, :, 1);
+G = obraz(:, :, 2);
+B = obraz(:, :, 3);
+
+Y = 0 + 0.299 * R + 0.587 * G + 0.114 * B;
+Cb = 128 - 0.168736 * R - 0.331264 * G + 0.5 * B;
+Cr = 128 + 0.5 * R - 0.418688 * G - 0.081312 * B;
+
+subplot(2, 2, 1), imshow(obraz / 255), title('RGB');
+subplot(2, 2, 2), imshow(Y/255), title('Y');
+subplot(2, 2, 3), imshow(Cb/255), title('Cb');
+subplot(2, 2, 4), imshow(Cr/255), title('Cr');
+
+%zad4
+img_uint8 = imread('rzeczka.jpg');
+obraz = double(img_uint8);
+
+function wynik = porownanie_v_PS_z_mnoznikiem(obraz_stary, obraz_nowy, mnoznik)
+    roznica = abs(obraz_nowy - obraz_stary);
+    wynik = przytnij_zakres(mnoznik * roznica);
+end
+function wynik = porownanie_v_2_z_mnoznikiem(obraz_stary, obraz_nowy, mnoznik)
+    wynik = przytnij_zakres((obraz_nowy - obraz_stary) * mnoznik + 127.5);
+end
+function wynik = przytnij_zakres(wejscie)
+    wejscie(wejscie < 0) = 0;
+    wejscie(wejscie > 255) = 255;
+    wynik = wejscie;
+end
+R = obraz(:, :, 1);
+G = obraz(:, :, 2);
+B = obraz(:, :, 3);
+
+Y = 0 + 0.299 * R + 0.587 * G + 0.114 * B;
+Cb = 128 - 0.168736 * R - 0.331264 * G + 0.5 * B;
+Cr = 128 + 0.5 * R - 0.418688 * G - 0.081312 * B;
+
+R_przywrocone = Y + 1.402 * (Cr - 128);
+G_przywrocone = Y - 0.344136 * (Cb - 128) - 0.714136 * (Cr - 128);
+B_przywrocone = Y + 1.772 * (Cb - 128);
+
+obraz_przywrocony = cat(3, R_przywrocone, G_przywrocone, B_przywrocone);
+
+wynik_v_PS_z_mnoznikiem = porownanie_v_PS_z_mnoznikiem(obraz, obraz_przywrocony, 1000000);
+wynik_v_2_z_mnoznikiem = porownanie_v_2_z_mnoznikiem(obraz, obraz_przywrocony, 1000000);
+
+roznica_modulu = max(abs(obraz(:) - obraz_przywrocony(:)));
+
+fprintf('Maksymalny moduł różnicy: %f\n', roznica_modulu);
+
+subplot(1, 2, 1), imshow(wynik_v_PS_z_mnoznikiem/255), title('porownanie v.PS * 1000000');
+subplot(1, 2, 2), imshow(wynik_v_2_z_mnoznikiem/255), title('porownanie v.2 * 1000000');
