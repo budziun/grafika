@@ -242,3 +242,52 @@ subplot(2, 2, 2), imshow(obraz_gamma_Y/255), title('YCbCr, Y gamma 1.5, RGB');
 subplot(2, 2, 3), imshow(wynik_v_PS_z_mnoznikiem/255), title('porownanie v.PS * 50');
 subplot(2, 2, 4), imshow(wynik_v_2_z_mnoznikiem/255), title('porownanie v.2 * 50');
 
+img = imread('rzeczka.jpg');
+img = double(img);
+
+R = img(:,:,1);
+G = img(:,:,2);
+B = img(:,:,3);
+
+Y  = 0.299 * R + 0.587 * G + 0.114 * B;
+Cb = 128 - 0.168736 * R - 0.331264 * G + 0.5 * B;
+Cr = 128 + 0.5 * R - 0.418688 * G - 0.081312 * B;
+
+PodbicieKolorow = 1.5;
+Cb = 128 + (Cb - 128) * PodbicieKolorow;
+Cr = 128 + (Cr - 128) * PodbicieKolorow;
+
+Cb = Przytnij_zakres(Cb);
+Cr = Przytnij_zakres(Cr);
+
+R_new = Y + 1.402 * (Cr - 128);
+G_new = Y - 0.344136 * (Cb - 128) - 0.714136 * (Cr - 128);
+B_new = Y + 1.772 * (Cb - 128);
+
+R_new = Przytnij_zakres(R_new);
+G_new = Przytnij_zakres(G_new);
+B_new = Przytnij_zakres(B_new);
+
+img_new = cat(3,R_new,G_new,B_new);
+img_new = uint8(img_new);
+
+function output = Przytnij_zakres(input)
+  input(input > 255) = 255;
+  input(input < 0 ) = 0;
+  output = input;
+end
+
+function output = porownianie_v_PS(img1,img2,mnoznik)
+  output = Przytnij_zakres(abs(img2-img1) * mnoznik);
+end
+function output = porownianie_v_2(img1,img2,mnoznik)
+  output = Przytnij_zakres(mnoznik * (img2-img1) + 127.5);
+end
+
+wynik_PS = porownianie_v_PS(img,img_new,10);
+wynik_v2 = porownianie_v_2(img,img_new,10);
+
+subplot(2,2,1), imshow(img/255),title('org');
+subplot(2,2,2), imshow(img_new), title('YCbCr, kolory * 1.5, RGB');
+subplot(2,2,3), imshow(wynik_PS), title('vps * 10');
+subplot(2,2,4), imshow(wynik_v2), title('v2 * 10');
